@@ -1,0 +1,180 @@
+html {
+  font-family: "Source Sans 3", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.rdc_calendar-title {
+  margin: 0;
+  position: absolute;
+  color: #4d4f5c;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.myCustomHeight {
+  height: 100dvh;
+}
+
+.calendar-wrapper {
+  padding: 20px;
+}
+
+.rbc-calendar {
+  max-width: 1129.66px;
+}
+
+.rbc-toolbar {
+  margin-bottom: 20px;
+}
+
+.rbc-btn-group:last-child {
+  margin-bottom: 37px;
+}
+
+.rbc-btn-group {
+  align-self: flex-end;
+  border-radius: 4px !important;
+  box-shadow: 1px 1px 2px rgba(215, 218, 226, 0.6) !important;
+}
+
+.rbc-toolbar button {
+  height: 32px !important;
+  border: 1px solid #d7dae2 !important;
+  padding: 8px 16px;
+}
+
+.rbc-toolbar-label {
+  color: #4d4f5c !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  align-self: flex-end;
+}
+
+.rbc-active {
+  background: none !important;
+  box-shadow: none !important;
+  color: #3b86ff !important;
+}
+
+.rbc-month-view {
+  border: 1px solid #eaf0f4;
+  box-shadow: 0px 2px 6px #0000000a !important;
+}
+
+.rbc-month-header {
+  height: 45px;
+  background-color: #f5f6fa;
+}
+
+.rbc-month-row {
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid #eaf0f4;
+}
+
+.rbc-header {
+  align-content: center;
+  border-left: none !important;
+  border-bottom: 1px solid #eaf0f4;
+}
+
+.rbc-header span {
+  color: #a3a6b4 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+.rbc-off-range-bg {
+  background: none;
+}
+
+.rbc-off-range {
+  color: rgba(67, 66, 93, 0.3) !important;
+}
+
+.rbc-day-bg {
+}
+
+.rbc-day-bg + .rbc-day-bg {
+  border-left: 1px solid #eaf0f4;
+}
+
+.rbc-date-cell {
+  font-size: 15px;
+  padding-top: 17px;
+  margin-bottom: 3px;
+  color: #43425d;
+}
+
+.rbc-today {
+  background-color: #f5f6fa !important;
+}
+
+.rbc-event {
+  border-radius: 4px !important;
+
+  background-color: #3b86ff !important;
+  padding-left: 14px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  height: 30px;
+
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.rbc-time-content {
+  max-height: fit-content;
+}
+
+.rbc-allday-cell .rbc-row-content {
+  /* height: 49px; */
+  /* overflow: scroll; */
+}
+
+.rbc-row-segment {
+  padding: 1px 2px 1px 1px;
+  box-sizing: border-box;
+}
+
+.rbc-events-container .rbc-event {
+  padding: 0 !important;
+  text-align: center;
+  min-height: fit-content;
+}
+
+.rbc-allday-cell .rbc-event,
+.rbc-allday-cell .rbc-event-content {
+  text-align: center;
+  height: 23px;
+  line-height: 23px;
+  padding: 0;
+}
+
+.rbc-event-label {
+  display: none !important;
+}
+
+.rbc-current-time-indicator {
+  background-color: #3B86FF !important;
+}
+
+.rbc-current-time-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(-45%) translateX(-50%);
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: #3B86FF !important;
+}
+
+.rbc-time-column .rbc-current-time-indicator {
+  width: 700%;
+}
