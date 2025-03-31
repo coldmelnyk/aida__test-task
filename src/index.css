@@ -15,7 +15,7 @@ body {
 }
 
 .myCustomHeight {
-  height: 100dvh;
+  height: 859px;
 }
 
 .calendar-wrapper {
@@ -23,7 +23,7 @@ body {
 }
 
 .rbc-calendar {
-  max-width: 1129.66px;
+  /* max-width: 1129.66px; */
 }
 
 .rbc-toolbar {
@@ -128,7 +128,7 @@ body {
 }
 
 .rbc-time-content {
-  max-height: fit-content;
+  /* max-height: fit-content; */
 }
 
 .rbc-allday-cell .rbc-row-content {
@@ -160,11 +160,11 @@ body {
 }
 
 .rbc-current-time-indicator {
-  background-color: #3B86FF !important;
+  background-color: #3b86ff;
 }
 
 .rbc-current-time-indicator::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -172,9 +172,42 @@ body {
   height: 8px;
   width: 8px;
   border-radius: 50%;
-  background-color: #3B86FF !important;
+  background-color: #3b86ff !important;
 }
 
 .rbc-time-column .rbc-current-time-indicator {
   width: 700%;
+  background: none !important;
+}
+
+.my-custom-indicator {
+  left: 70px;
+}
+
+.modal-window {
+  height: fit-content;
+  width: 201px;
+  z-index: 4;
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.modal-window-form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 20px;
+  padding-top: 10px;
+}
+
+.modal-window-close-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-window-buttons {
+  display: flex;
+  justify-content: space-between;
 }
