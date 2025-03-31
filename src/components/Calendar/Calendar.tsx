@@ -15,6 +15,7 @@ export const MyCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [isModal, setIsModal] = useState(false);
   const [eventSlot, setEventSlot] = useState<SlotInfo | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<null | Event>(null);
 
   const onNavigate = useCallback(
     (newDate: Date) => setDate(newDate),
@@ -75,21 +76,10 @@ export const MyCalendar = () => {
             setIsModal(true);
             setEventSlot(slot);
             console.log(slot);
-
-            // if (false) {
-            //   const number = Math.random();
-
-            //   const newEvent = {
-            //     id: number,
-            //     title: 'test new event',
-            //     start: slot.start,
-            //     end: slot.end,
-            //   };
-
-            //   const newEvents = [...eventsState, newEvent];
-
-            //   setEventsState(newEvents);
-            // }
+          }}
+          onSelectEvent={(event) => {
+            setSelectedEvent(event);
+            setIsModal(true);
           }}
         />
 
@@ -100,6 +90,9 @@ export const MyCalendar = () => {
             handleEventsState={setEventsState}
             handleIsModal={setIsModal}
             eventSlot={eventSlot}
+            selectedEvent={selectedEvent}
+            handleSelectedEvent={setSelectedEvent}
+            eventsState={eventsState}
           />
         )}
       </div>

@@ -3,6 +3,8 @@ import { SlotInfo } from "react-big-calendar";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 import { Event } from "../../types";
+import { convertDate } from "../../utils";
+import { DateStyle } from "../../types/enums";
 
 interface Props {
   top: number | undefined;
@@ -10,6 +12,9 @@ interface Props {
   handleEventsState: React.Dispatch<React.SetStateAction<Event[]>>;
   handleIsModal: React.Dispatch<React.SetStateAction<boolean>>;
   eventSlot: SlotInfo | null;
+  selectedEvent: Event | null;
+  handleSelectedEvent: React.Dispatch<React.SetStateAction<Event | null>>;
+  eventsState: Event[];
 }
 
 export const ModalOfEvents: React.FC<Props> = ({
@@ -18,11 +23,22 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleEventsState,
   handleIsModal,
   eventSlot,
+  selectedEvent,
+  handleSelectedEvent,
+  eventsState,
 }) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data: FieldValues) => {
     if (data) {
+      let newEvents = [...eventsState];
+
+      if (selectedEvent) {
+        newEvents = eventsState.filter(
+          (event) => event.id !== selectedEvent.id
+        );
+      }
+
       const start = new Date(`${data.date}T${data.startTime}:00`);
       const end = new Date(`${data.date}T${data.endTime}:00`);
       const id = Math.random();
@@ -34,11 +50,10 @@ export const ModalOfEvents: React.FC<Props> = ({
         desc: data.desc,
       };
 
-      handleEventsState((prev) => [...prev, newData]);
+      handleEventsState([...newEvents, newData]);
       handleIsModal(false);
+      handleSelectedEvent(null);
     }
-
-    console.log(data);
   };
 
   if (top && left) {
@@ -69,34 +84,59 @@ export const ModalOfEvents: React.FC<Props> = ({
               X
             </button>
           </div>
+
           <input
             {...register("title", { required: true })}
             placeholder="event name"
             type="text"
+            defaultValue={selectedEvent ? selectedEvent.title : ""}
           />
+
           <input
             {...register("date", { required: true })}
             placeholder="event date"
             type="date"
-            value={date}
+            defaultValue={
+              selectedEvent
+                ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+                : date
+            }
           />
+
           <input
             {...register("startTime", { required: true })}
             placeholder="event time"
             type="time"
-            defaultValue={"00:00"}
+            defaultValue={
+              selectedEvent
+                ? convertDate(selectedEvent.start, DateStyle.HHmm)
+                : "00:00"
+            }
           />
+
           <input
             {...register("endTime", { required: true })}
             placeholder="event time"
             type="time"
-            defaultValue={"00:00"}
+            defaultValue={
+              selectedEvent
+                ? convertDate(selectedEvent.end, DateStyle.HHmm)
+                : "00:00"
+            }
           />
-          <input {...register("desc")} placeholder="notes" type="text" />
+
+          <input
+            {...register("desc")}
+            placeholder="notes"
+            type="text"
+            defaultValue={selectedEvent ? selectedEvent.desc : ""}
+          />
+
           <div className="modal-window-buttons">
             <button type="button" onClick={() => handleIsModal(false)}>
               Cancel
             </button>
+
             <input type="submit" value="Save" />
           </div>
         </form>
