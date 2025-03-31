@@ -16,6 +16,7 @@ export const MyCalendar = () => {
   const [isModal, setIsModal] = useState(false);
   const [eventSlot, setEventSlot] = useState<SlotInfo | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<null | Event>(null);
+  const [click, setClick] = useState<null | MouseEvent>(null);
 
   const onNavigate = useCallback(
     (newDate: Date) => setDate(newDate),
@@ -27,6 +28,12 @@ export const MyCalendar = () => {
   );
 
   useEffect(() => {
+    const mouseClick = (event: MouseEvent) => {
+      setClick(event);
+    };
+
+    document.addEventListener("click", mouseClick);
+
     const allDayCell = document.getElementsByClassName(
       "rbc-time-header-gutter"
     );
@@ -52,6 +59,10 @@ export const MyCalendar = () => {
         }
       }, 0);
     }
+
+    return () => {
+      document.removeEventListener("click", mouseClick);
+    };
   }, [view, date]);
 
   return (
@@ -75,9 +86,8 @@ export const MyCalendar = () => {
           onSelectSlot={(slot) => {
             setIsModal(true);
             setEventSlot(slot);
-            console.log(slot);
           }}
-          onSelectEvent={(event) => {
+          onDoubleClickEvent={(event) => {
             setSelectedEvent(event);
             setIsModal(true);
           }}
@@ -93,6 +103,8 @@ export const MyCalendar = () => {
             selectedEvent={selectedEvent}
             handleSelectedEvent={setSelectedEvent}
             eventsState={eventsState}
+            handleEventSlot={setEventSlot}
+            click={click}
           />
         )}
       </div>
