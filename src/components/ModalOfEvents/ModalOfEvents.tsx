@@ -34,6 +34,19 @@ export const ModalOfEvents: React.FC<Props> = ({
   const { register, handleSubmit } = useForm();
   const [isAllDay, setIsAllDay] = useState(false);
 
+  const handleDeletingEvent = () => {
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      const newEvents = eventsState.filter(
+        (event) => event.id !== selectedEvent?.id
+      );
+
+      handleEventsState(newEvents);
+      handleIsModal(false);
+      handleSelectedEvent(null);
+      handleEventSlot(null);
+    }
+  };
+
   const onSubmit = (data: FieldValues) => {
     if (data) {
       let newEvents = [...eventsState];
@@ -101,12 +114,9 @@ export const ModalOfEvents: React.FC<Props> = ({
         <label className="modal-window-delete">
           <span>Delete event</span>
           <button
+            disabled={!selectedEvent}
             type="button"
-            onClick={() => {
-              handleIsModal(false);
-              handleSelectedEvent(null);
-              handleEventSlot(null);
-            }}
+            onClick={handleDeletingEvent}
           >
             X
           </button>
