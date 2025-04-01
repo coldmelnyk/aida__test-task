@@ -33,7 +33,7 @@ export const MyCalendar = () => {
   const onEventDrop = ({ event, start, end }: EventAction) => {
     const updatedEvents = eventsState.map((e) =>
       e.id === event.id
-        ? { ...e, start: new Date(start), end: new Date(end) } // Перетворюємо в Date
+        ? { ...e, start: new Date(start), end: new Date(end) }
         : e
     );
     setEventsState(updatedEvents);
@@ -42,7 +42,7 @@ export const MyCalendar = () => {
   const onEventResize = ({ event, start, end }: EventAction) => {
     const updatedEvents = eventsState.map((e) =>
       e.id === event.id
-        ? { ...e, start: new Date(start), end: new Date(end) } // Перетворюємо в Date
+        ? { ...e, start: new Date(start), end: new Date(end) }
         : e
     );
     setEventsState(updatedEvents);

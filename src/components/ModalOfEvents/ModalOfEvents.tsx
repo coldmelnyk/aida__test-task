@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SlotInfo } from "react-big-calendar";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
@@ -29,9 +29,10 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleSelectedEvent,
   eventsState,
   handleEventSlot,
-  click
+  click,
 }) => {
   const { register, handleSubmit } = useForm();
+  const [isAllDay, setIsAllDay] = useState(false);
 
   const onSubmit = (data: FieldValues) => {
     if (data) {
@@ -44,7 +45,9 @@ export const ModalOfEvents: React.FC<Props> = ({
       }
 
       const start = new Date(`${data.date}T${data.startTime}:00`);
-      const end = new Date(`${data.date}T${data.endTime}:00`);
+      const end = isAllDay
+        ? moment(start).add(1, "days").toDate()
+        : new Date(`${data.date}T${data.endTime}:00`);
       const id = Math.random();
       const newData = {
         id,
@@ -52,6 +55,7 @@ export const ModalOfEvents: React.FC<Props> = ({
         end,
         title: data.title,
         desc: data.desc,
+        allDay: data.allDay,
       };
 
       handleEventsState([...newEvents, newData]);
@@ -66,8 +70,8 @@ export const ModalOfEvents: React.FC<Props> = ({
   let date;
 
   if (top && left) {
-     correctLeft = +left - 100;
-     correctRight = +top + 40;
+    correctLeft = +left - 100;
+    correctRight = +top + 40;
 
     date = moment(eventSlot?.start).format("YYYY-MM-DD");
   } else {
@@ -81,8 +85,8 @@ export const ModalOfEvents: React.FC<Props> = ({
     correctLeft = document.body.clientWidth - 205;
   }
 
-  if (correctRight > document.body.clientHeight - 120) {
-    correctRight = document.body.clientHeight - 120;
+  if (correctRight > document.body.clientHeight - 165) {
+    correctRight = document.body.clientHeight - 165;
   }
 
   return (
@@ -122,9 +126,22 @@ export const ModalOfEvents: React.FC<Props> = ({
           }
         />
 
+        <label className="modal-window-checkbox">
+          <span>All-day event</span>
+          <input
+            {...register("allDay")}
+            onClick={(state) =>
+              setIsAllDay((state.target as HTMLInputElement).checked)
+            }
+            type="checkbox"
+            defaultChecked={selectedEvent ? selectedEvent.allDay : false}
+          />
+        </label>
+
         <input
           {...register("startTime", { required: true })}
           placeholder="event time"
+          disabled={isAllDay}
           type="time"
           defaultValue={
             selectedEvent
@@ -137,6 +154,7 @@ export const ModalOfEvents: React.FC<Props> = ({
           {...register("endTime", { required: true })}
           placeholder="event time"
           type="time"
+          disabled={isAllDay}
           defaultValue={
             selectedEvent
               ? convertDate(selectedEvent.end, DateStyle.HHmm)
