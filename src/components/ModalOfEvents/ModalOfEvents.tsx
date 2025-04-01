@@ -56,9 +56,12 @@ export const ModalOfEvents: React.FC<Props> = ({
         title: data.title,
         desc: data.desc,
         allDay: data.allDay,
+        eventColor: data.eventColor,
       };
 
-      handleEventsState([...newEvents, newData]);
+       newEvents.push(newData);
+
+      handleEventsState(newEvents);
       handleIsModal(false);
       handleSelectedEvent(null);
       handleEventSlot(null);
@@ -85,8 +88,8 @@ export const ModalOfEvents: React.FC<Props> = ({
     correctLeft = document.body.clientWidth - 205;
   }
 
-  if (correctRight > document.body.clientHeight - 165) {
-    correctRight = document.body.clientHeight - 165;
+  if (correctRight > document.body.clientHeight - 210) {
+    correctRight = document.body.clientHeight - 210;
   }
 
   return (
@@ -95,7 +98,8 @@ export const ModalOfEvents: React.FC<Props> = ({
       className="modal-window"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="modal-window-form">
-        <div className="modal-window-close-wrapper">
+        <label className="modal-window-delete">
+          <span>Delete event</span>
           <button
             type="button"
             onClick={() => {
@@ -106,7 +110,7 @@ export const ModalOfEvents: React.FC<Props> = ({
           >
             X
           </button>
-        </div>
+        </label>
 
         <input
           {...register("title", { required: true })}
@@ -161,6 +165,24 @@ export const ModalOfEvents: React.FC<Props> = ({
               : moment(eventSlot!.end).format("HH:mm")
           }
         />
+
+        <label className="modal-window-select">
+          <span>Choose color:</span>
+          <select
+            {...register("eventColor")}
+            name="Color"
+            id="modal-color-select"
+            defaultValue={selectedEvent ? selectedEvent.eventColor : "default"}
+          >
+            <option value="default">default</option>
+            <option value="green">green</option>
+            <option value="red">red</option>
+            <option value="yellow">yellow</option>
+            <option value="purple">purple</option>
+            <option value="pink">pink</option>
+            <option value="orange">orange</option>
+          </select>
+        </label>
 
         <input
           {...register("desc")}

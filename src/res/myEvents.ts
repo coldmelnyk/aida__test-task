@@ -7,5 +7,6 @@ export const myEvents: MyEvent[] = [
     start: new Date(2025, 3, 29),
     end: new Date(2025, 3, 31),
     allDay: true,
+    eventColor: 'default',
   },
 ];

@@ -14,7 +14,18 @@ export const MyCalendar = () => {
   const [view, setView] = useState<(typeof Views)[keyof typeof Views]>(
     Views.MONTH
   );
-  const [eventsState, setEventsState] = useState<MyEvent[]>(myEvents);
+  const [eventsState, setEventsState] = useState<MyEvent[]>(() => {
+    const savedEvents = JSON.parse(localStorage.getItem("events") || "[]");
+
+    return savedEvents.length > 0
+      ? savedEvents.map((event: MyEvent) => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+        }))
+      : myEvents;
+  });
+
   const [date, setDate] = useState(new Date());
   const [isModal, setIsModal] = useState(false);
   const [eventSlot, setEventSlot] = useState<SlotInfo | null>(null);
@@ -25,6 +36,7 @@ export const MyCalendar = () => {
     (newDate: Date) => setDate(newDate),
     [setDate]
   );
+
   const onView = useCallback(
     (newView: (typeof Views)[keyof typeof Views]) => setView(newView),
     [setView]
@@ -38,7 +50,7 @@ export const MyCalendar = () => {
     );
     setEventsState(updatedEvents);
   };
-  
+
   const onEventResize = ({ event, start, end }: EventAction) => {
     const updatedEvents = eventsState.map((e) =>
       e.id === event.id
@@ -47,7 +59,11 @@ export const MyCalendar = () => {
     );
     setEventsState(updatedEvents);
   };
-  
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(eventsState));
+  }, [eventsState]);
+
   useEffect(() => {
     const mouseClick = (event: MouseEvent) => {
       if (!isModal) {

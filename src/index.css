@@ -210,17 +210,14 @@ body {
   padding-top: 10px;
 }
 
-.modal-window-close-wrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .modal-window-buttons {
   display: flex;
   justify-content: space-between;
 }
 
-.modal-window-checkbox {
+.modal-window-checkbox,
+.modal-window-select,
+.modal-window-delete {
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -3,6 +3,7 @@ export interface MyEvent {
   title: string;
   start: Date;
   end: Date;
+  eventColor: string;
   allDay?: boolean;
   desc?: string;
 }
