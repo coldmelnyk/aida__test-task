@@ -59,7 +59,7 @@ export const ModalOfEvents: React.FC<Props> = ({
         eventColor: data.eventColor,
       };
 
-       newEvents.push(newData);
+      newEvents.push(newData);
 
       handleEventsState(newEvents);
       handleIsModal(false);
@@ -145,7 +145,7 @@ export const ModalOfEvents: React.FC<Props> = ({
         <input
           {...register("startTime", { required: true })}
           placeholder="event time"
-          disabled={isAllDay}
+          disabled={isAllDay || selectedEvent?.allDay}
           type="time"
           defaultValue={
             selectedEvent
@@ -158,7 +158,7 @@ export const ModalOfEvents: React.FC<Props> = ({
           {...register("endTime", { required: true })}
           placeholder="event time"
           type="time"
-          disabled={isAllDay}
+          disabled={isAllDay || selectedEvent?.allDay}
           defaultValue={
             selectedEvent
               ? convertDate(selectedEvent.end, DateStyle.HHmm)

@@ -126,9 +126,6 @@ export const MyCalendar = () => {
             setIsModal(true);
             setEventSlot(slot);
           }}
-          onSelectEvent={(event) => {
-            console.log(event);
-          }}
           onDoubleClickEvent={(event) => {
             setSelectedEvent(event as MyEvent);
             setIsModal(true);
