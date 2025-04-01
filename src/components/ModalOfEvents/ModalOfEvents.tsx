@@ -146,7 +146,7 @@ export const ModalOfEvents: React.FC<Props> = ({
           defaultValue={
             selectedEvent
               ? convertDate(selectedEvent.start, DateStyle.HHmm)
-              : "00:00"
+              : moment(eventSlot!.start).format("HH:mm")
           }
         />
 
@@ -158,7 +158,7 @@ export const ModalOfEvents: React.FC<Props> = ({
           defaultValue={
             selectedEvent
               ? convertDate(selectedEvent.end, DateStyle.HHmm)
-              : "00:00"
+              : moment(eventSlot!.end).format("HH:mm")
           }
         />
 

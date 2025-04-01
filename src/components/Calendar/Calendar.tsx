@@ -50,7 +50,9 @@ export const MyCalendar = () => {
   
   useEffect(() => {
     const mouseClick = (event: MouseEvent) => {
-      setClick(event);
+      if (!isModal) {
+        setClick(event);
+      }
     };
 
     document.addEventListener("click", mouseClick);
@@ -84,7 +86,7 @@ export const MyCalendar = () => {
     return () => {
       document.removeEventListener("click", mouseClick);
     };
-  }, [view, date]);
+  }, [view, date, isModal]);
 
   return (
     <>
