@@ -31,7 +31,7 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleEventSlot,
   click,
 }) => {
-  const { register, handleSubmit, reset, control } = useForm();
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
   const [isAllDay, setIsAllDay] = useState(false);
 
   const handleDeletingEvent = () => {
@@ -101,8 +101,8 @@ export const ModalOfEvents: React.FC<Props> = ({
     correctLeft = document.body.clientWidth - 205;
   }
 
-  if (correctRight > document.body.clientHeight - 210) {
-    correctRight = document.body.clientHeight - 210;
+  if (correctRight > document.body.clientHeight - 400) {
+    correctRight = document.body.clientHeight - 400;
   }
 
   useEffect(() => {
@@ -141,11 +141,14 @@ export const ModalOfEvents: React.FC<Props> = ({
         </label>
 
         <input
-          {...register("title", { required: true })}
+          {...register("title", { required: true, maxLength: 30 })}
           placeholder="event name"
           type="text"
           defaultValue={selectedEvent ? selectedEvent.title : ""}
         />
+        {errors.title && (
+          <span className="modal-window-error-title">Max length is 30 symbols!</span>
+        )}
 
         <input
           {...register("date", { required: true })}

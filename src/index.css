@@ -250,3 +250,9 @@ body {
 .purple {
   background-color: purple !important;
 }
+
+.modal-window-error-title {
+  color: red;
+  font-size: 12px;
+  font-weight: 400;
+}
