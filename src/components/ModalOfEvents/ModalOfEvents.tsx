@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SlotInfo } from "react-big-calendar";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
@@ -31,7 +31,7 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleEventSlot,
   click,
 }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [isAllDay, setIsAllDay] = useState(false);
 
   const handleDeletingEvent = () => {
@@ -104,6 +104,24 @@ export const ModalOfEvents: React.FC<Props> = ({
   if (correctRight > document.body.clientHeight - 210) {
     correctRight = document.body.clientHeight - 210;
   }
+
+  useEffect(() => {
+    reset({
+      title: selectedEvent?.title || "",
+      date: selectedEvent
+        ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+        : moment(eventSlot?.start).format("YYYY-MM-DD"),
+      allDay: selectedEvent?.allDay || false,
+      startTime: selectedEvent
+        ? convertDate(selectedEvent.start, DateStyle.HHmm)
+        : moment(eventSlot?.start).format("HH:mm"),
+      endTime: selectedEvent
+        ? convertDate(selectedEvent.end, DateStyle.HHmm)
+        : moment(eventSlot?.end).format("HH:mm"),
+      eventColor: selectedEvent?.eventColor || "default",
+      desc: selectedEvent?.desc || "",
+    });
+  }, [selectedEvent, eventSlot, reset]);
 
   return (
     <div

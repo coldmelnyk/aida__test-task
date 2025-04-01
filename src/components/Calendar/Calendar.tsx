@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Calendar, momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import { myEvents } from "../../res/myEvents";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { ModalOfEvents } from "../ModalOfEvents";
 import { MyEvent, EventAction } from "../../types";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
@@ -60,19 +60,25 @@ export const MyCalendar = () => {
     setEventsState(updatedEvents);
   };
 
-  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(eventsState));
-  }, [eventsState]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mouseClick = (event: MouseEvent) => {
       if (!isModal) {
         setClick(event);
       }
     };
 
-    document.addEventListener("click", mouseClick);
+    document.addEventListener("dblclick", mouseClick);
 
+    return () => {
+      document.removeEventListener("dblclick", mouseClick);
+    };
+  }, [isModal]);
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(eventsState));
+  }, [eventsState]);
+
+  useEffect(() => {
     const allDayCell = document.getElementsByClassName(
       "rbc-time-header-gutter"
     );
@@ -98,10 +104,6 @@ export const MyCalendar = () => {
         }
       }, 0);
     }
-
-    return () => {
-      document.removeEventListener("click", mouseClick);
-    };
   }, [view, date, isModal]);
 
   return (
@@ -123,12 +125,19 @@ export const MyCalendar = () => {
           onNavigate={onNavigate}
           selectable
           onSelectSlot={(slot) => {
-            setIsModal(true);
+            setSelectedEvent(null);
+            setEventSlot(null);
+
             setEventSlot(slot);
+            setIsModal(true);
           }}
           onDoubleClickEvent={(event) => {
+            setSelectedEvent(null);
+            setEventSlot(null);
+            setIsModal(false);
+
             setSelectedEvent(event as MyEvent);
-            setIsModal(true);
+            setTimeout(() => setIsModal(true), 0);
           }}
           onEventDrop={onEventDrop}
           onEventResize={onEventResize}
