@@ -192,6 +192,10 @@ body {
   left: 70px;
 }
 
+.indicator-day {
+  opacity: 1 !important;
+}
+
 .modal-window {
   height: fit-content;
   width: 201px;

@@ -32,9 +32,7 @@ export const MyCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState<null | MyEvent>(null);
   const [click, setClick] = useState<null | MouseEvent>(null);
 
-  const eventPropGetter = (
-    event: MyEvent
-  ) => {
+  const eventPropGetter = (event: MyEvent) => {
     return {
       className: event.eventColor !== "default" ? event.eventColor : "",
     };
@@ -75,10 +73,23 @@ export const MyCalendar = () => {
       }
     };
 
+    const escClose = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (isModal) {
+          setIsModal(false);
+          setSelectedEvent(null);
+          setEventSlot(null);
+          setClick(null);
+        }
+      }
+    };
+
     document.addEventListener("dblclick", mouseClick);
+    document.addEventListener("keydown", escClose);
 
     return () => {
       document.removeEventListener("dblclick", mouseClick);
+      document.removeEventListener("keydown", escClose);
     };
   }, [isModal]);
 
@@ -90,6 +101,16 @@ export const MyCalendar = () => {
     const allDayCell = document.getElementsByClassName(
       "rbc-time-header-gutter"
     );
+
+    if (view === Views.DAY) {
+      setTimeout(() => {
+        const indicator = document.getElementsByClassName(
+          "rbc-current-time-indicator"
+        )[0];
+
+        indicator.classList.add("indicator-day");
+      }, 0);
+    }
 
     if (allDayCell.length > 0) {
       allDayCell[0].textContent = "all day";
