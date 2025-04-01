@@ -32,6 +32,14 @@ export const MyCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState<null | MyEvent>(null);
   const [click, setClick] = useState<null | MouseEvent>(null);
 
+  const eventPropGetter = (
+    event: MyEvent
+  ) => {
+    return {
+      className: event.eventColor !== "default" ? event.eventColor : "",
+    };
+  };
+
   const onNavigate = useCallback(
     (newDate: Date) => setDate(newDate),
     [setDate]
@@ -142,6 +150,7 @@ export const MyCalendar = () => {
           onEventDrop={onEventDrop}
           onEventResize={onEventResize}
           resizable
+          eventPropGetter={eventPropGetter}
         />
 
         {isModal && (

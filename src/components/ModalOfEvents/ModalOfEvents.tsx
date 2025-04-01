@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SlotInfo } from "react-big-calendar";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, Controller } from "react-hook-form";
 import moment from "moment";
 import { MyEvent } from "../../types";
 import { convertDate } from "../../utils";
@@ -31,7 +31,7 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleEventSlot,
   click,
 }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, control } = useForm();
   const [isAllDay, setIsAllDay] = useState(false);
 
   const handleDeletingEvent = () => {
@@ -196,20 +196,22 @@ export const ModalOfEvents: React.FC<Props> = ({
 
         <label className="modal-window-select">
           <span>Choose color:</span>
-          <select
-            {...register("eventColor")}
-            name="Color"
-            id="modal-color-select"
+          <Controller
+            name="eventColor"
+            control={control}
             defaultValue={selectedEvent ? selectedEvent.eventColor : "default"}
-          >
-            <option value="default">default</option>
-            <option value="green">green</option>
-            <option value="red">red</option>
-            <option value="yellow">yellow</option>
-            <option value="purple">purple</option>
-            <option value="pink">pink</option>
-            <option value="orange">orange</option>
-          </select>
+            render={({ field }) => (
+              <select {...field}>
+                <option value="default">default</option>
+                <option value="green">green</option>
+                <option value="red">red</option>
+                <option value="yellow">yellow</option>
+                <option value="purple">purple</option>
+                <option value="pink">pink</option>
+                <option value="orange">orange</option>
+              </select>
+            )}
+          />
         </label>
 
         <input

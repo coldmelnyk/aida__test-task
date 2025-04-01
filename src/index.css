@@ -195,7 +195,7 @@ body {
 .modal-window {
   height: fit-content;
   width: 201px;
-  z-index: 4;
+  z-index: 10;
   position: absolute;
   border: 1px solid black;
   border-radius: 10px;
@@ -221,4 +221,28 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.red {
+  background-color: red !important;
+}
+
+.green {
+  background-color: green !important;
+}
+
+.yellow {
+  background-color: yellow !important;
+}
+
+.pink {
+  background-color: pink !important;
+}
+
+.orange {
+  background-color: orange !important;
+}
+
+.purple {
+  background-color: purple !important;
 }
