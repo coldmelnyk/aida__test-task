@@ -176,8 +176,16 @@ body {
 }
 
 .rbc-time-column .rbc-current-time-indicator {
-  width: 700%;
-  background: none !important;
+  /* width: 700%; */
+  /* background: none !important; */
+}
+
+.rbc-day-slot .rbc-current-time-indicator {
+  opacity: 0;
+}
+
+.rbc-current-time-indicator-visible {
+  opacity: 1;
 }
 
 .my-custom-indicator {

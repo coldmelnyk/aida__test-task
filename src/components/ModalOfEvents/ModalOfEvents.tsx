@@ -2,19 +2,19 @@ import React from "react";
 import { SlotInfo } from "react-big-calendar";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
-import { Event } from "../../types";
+import { MyEvent } from "../../types";
 import { convertDate } from "../../utils";
 import { DateStyle } from "../../types/enums";
 
 interface Props {
   top: number | undefined;
   left: number | undefined;
-  handleEventsState: React.Dispatch<React.SetStateAction<Event[]>>;
+  handleEventsState: React.Dispatch<React.SetStateAction<MyEvent[]>>;
   handleIsModal: React.Dispatch<React.SetStateAction<boolean>>;
   eventSlot: SlotInfo | null;
-  selectedEvent: Event | null;
-  handleSelectedEvent: React.Dispatch<React.SetStateAction<Event | null>>;
-  eventsState: Event[];
+  selectedEvent: MyEvent | null;
+  handleSelectedEvent: React.Dispatch<React.SetStateAction<MyEvent | null>>;
+  eventsState: MyEvent[];
   handleEventSlot: React.Dispatch<React.SetStateAction<SlotInfo | null>>;
   click: MouseEvent | null;
 }

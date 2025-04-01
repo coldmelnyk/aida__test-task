@@ -3,19 +3,22 @@ import { Calendar, momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import { myEvents } from "../../res/myEvents";
 import { useCallback, useEffect, useState } from "react";
 import { ModalOfEvents } from "../ModalOfEvents";
-import { Event } from "../../types";
+import { MyEvent, EventAction } from "../../types";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 
 const localizer = momentLocalizer(moment);
+const DnDCalendar = withDragAndDrop<MyEvent>(Calendar);
 
 export const MyCalendar = () => {
   const [view, setView] = useState<(typeof Views)[keyof typeof Views]>(
     Views.MONTH
   );
-  const [eventsState, setEventsState] = useState<Event[]>(myEvents);
+  const [eventsState, setEventsState] = useState<MyEvent[]>(myEvents);
   const [date, setDate] = useState(new Date());
   const [isModal, setIsModal] = useState(false);
   const [eventSlot, setEventSlot] = useState<SlotInfo | null>(null);
-  const [selectedEvent, setSelectedEvent] = useState<null | Event>(null);
+  const [selectedEvent, setSelectedEvent] = useState<null | MyEvent>(null);
   const [click, setClick] = useState<null | MouseEvent>(null);
 
   const onNavigate = useCallback(
@@ -27,6 +30,24 @@ export const MyCalendar = () => {
     [setView]
   );
 
+  const onEventDrop = ({ event, start, end }: EventAction) => {
+    const updatedEvents = eventsState.map((e) =>
+      e.id === event.id
+        ? { ...e, start: new Date(start), end: new Date(end) } // Перетворюємо в Date
+        : e
+    );
+    setEventsState(updatedEvents);
+  };
+  
+  const onEventResize = ({ event, start, end }: EventAction) => {
+    const updatedEvents = eventsState.map((e) =>
+      e.id === event.id
+        ? { ...e, start: new Date(start), end: new Date(end) } // Перетворюємо в Date
+        : e
+    );
+    setEventsState(updatedEvents);
+  };
+  
   useEffect(() => {
     const mouseClick = (event: MouseEvent) => {
       setClick(event);
@@ -70,7 +91,7 @@ export const MyCalendar = () => {
       <div className="calendar-wrapper myCustomHeight">
         <h3 className="rdc_calendar-title">Calendar View</h3>
 
-        <Calendar
+        <DnDCalendar
           localizer={localizer}
           events={eventsState}
           views={[Views.MONTH, Views.WEEK, Views.DAY]}
@@ -87,10 +108,16 @@ export const MyCalendar = () => {
             setIsModal(true);
             setEventSlot(slot);
           }}
+          onSelectEvent={(event) => {
+            console.log(event);
+          }}
           onDoubleClickEvent={(event) => {
-            setSelectedEvent(event);
+            setSelectedEvent(event as MyEvent);
             setIsModal(true);
           }}
+          onEventDrop={onEventDrop}
+          onEventResize={onEventResize}
+          resizable
         />
 
         {isModal && (

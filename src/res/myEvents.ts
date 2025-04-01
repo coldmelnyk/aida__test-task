@@ -1,6 +1,6 @@
-import { Event } from "../types";
+import { MyEvent } from "../types";
 
-export const myEvents: Event[] = [
+export const myEvents: MyEvent[] = [
   {
     id: 1,
     title: "Long Event",
