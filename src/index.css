@@ -221,7 +221,8 @@ body {
 
 .modal-window-checkbox,
 .modal-window-select,
-.modal-window-delete {
+.modal-window-delete,
+.modal-window-date {
   display: flex;
   align-items: center;
   justify-content: space-between;

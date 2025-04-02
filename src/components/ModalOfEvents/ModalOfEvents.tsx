@@ -3,7 +3,7 @@ import { SlotInfo } from "react-big-calendar";
 import { FieldValues, useForm, Controller } from "react-hook-form";
 import moment from "moment";
 import { MyEvent } from "../../types";
-import { convertDate } from "../../utils";
+import { convertDate, isEventAllDay, isEventMoreThanOneDay } from "../../utils";
 import { DateStyle } from "../../types/enums";
 
 interface Props {
@@ -31,8 +31,15 @@ export const ModalOfEvents: React.FC<Props> = ({
   handleEventSlot,
   click,
 }) => {
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm();
   const [isAllDay, setIsAllDay] = useState(false);
+  const [moreThanOneDay, setMoreThanOneDay] = useState(false);
 
   const handleDeletingEvent = () => {
     if (window.confirm("Are you sure you want to delete this event?")) {
@@ -57,10 +64,21 @@ export const ModalOfEvents: React.FC<Props> = ({
         );
       }
 
-      const start = new Date(`${data.date}T${data.startTime}:00`);
-      const end = isAllDay
-        ? moment(start).add(1, "days").toDate()
-        : new Date(`${data.date}T${data.endTime}:00`);
+      let start;
+      let end;
+
+      if (moreThanOneDay) {
+        start = new Date(`${data.dateStart}T${data.startTime}:00`);
+        end = moment(new Date(`${data.dateEnd}T${data.endTime}:00`))
+          .add(1, "days")
+          .toDate();
+      } else {
+        start = new Date(`${data.date}T${data.startTime}:00`);
+        end = isAllDay
+          ? moment(start).add(1, "days").toDate()
+          : new Date(`${data.date}T${data.endTime}:00`);
+      }
+
       const id = Math.random();
       const newData = {
         id,
@@ -81,8 +99,8 @@ export const ModalOfEvents: React.FC<Props> = ({
     }
   };
 
-  let correctLeft;
-  let correctRight;
+  let correctLeft = document.body.clientWidth / 2;
+  let correctRight = document.body.clientHeight / 2;
   let date;
 
   if (top && left) {
@@ -91,8 +109,10 @@ export const ModalOfEvents: React.FC<Props> = ({
 
     date = moment(eventSlot?.start).format("YYYY-MM-DD");
   } else {
-    correctLeft = click!.x - 100;
-    correctRight = click!.y + 40;
+    if (click) {
+      correctLeft = click!.x - 100;
+      correctRight = click!.y + 40;
+    }
   }
 
   if (correctLeft < 0) {
@@ -106,22 +126,66 @@ export const ModalOfEvents: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    reset({
-      title: selectedEvent?.title || "",
-      date: selectedEvent
-        ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
-        : moment(eventSlot?.start).format("YYYY-MM-DD"),
-      allDay: selectedEvent?.allDay || false,
-      startTime: selectedEvent
-        ? convertDate(selectedEvent.start, DateStyle.HHmm)
-        : moment(eventSlot?.start).format("HH:mm"),
-      endTime: selectedEvent
-        ? convertDate(selectedEvent.end, DateStyle.HHmm)
-        : moment(eventSlot?.end).format("HH:mm"),
-      eventColor: selectedEvent?.eventColor || "default",
-      desc: selectedEvent?.desc || "",
-    });
-  }, [selectedEvent, eventSlot, reset]);
+    if (selectedEvent) {
+      reset({
+        title: selectedEvent?.title || "",
+        date: selectedEvent
+          ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+          : moment(eventSlot?.start).format("YYYY-MM-DD"),
+        allDay: selectedEvent?.allDay || false,
+        startTime: selectedEvent
+          ? convertDate(selectedEvent.start, DateStyle.HHmm)
+          : moment(eventSlot?.start).format("HH:mm"),
+        endTime: selectedEvent
+          ? convertDate(selectedEvent.end, DateStyle.HHmm)
+          : moment(eventSlot?.end).format("HH:mm"),
+        eventColor: selectedEvent?.eventColor || "default",
+        desc: selectedEvent?.desc || "",
+        dateStart:
+          selectedEvent || moreThanOneDay
+            ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+            : moment(eventSlot?.start).format("YYYY-MM-DD"),
+        dateEnd:
+          selectedEvent || moreThanOneDay
+            ? convertDate(selectedEvent.end, DateStyle.YYYYMMDD)
+            : moment(eventSlot?.end).format("YYYY-MM-DD"),
+      });
+
+      if (selectedEvent.allDay) {
+        setIsAllDay(true);
+      }
+
+      if (isEventMoreThanOneDay(selectedEvent.start, selectedEvent.end)) {
+        setMoreThanOneDay(true);
+        setIsAllDay(true);
+      }
+    }
+
+    if (eventSlot) {
+      if (isEventMoreThanOneDay(eventSlot.start, eventSlot.end)) {
+        setMoreThanOneDay(true);
+        setIsAllDay(true);
+      } else if (isEventAllDay(eventSlot.start, eventSlot.end)) {
+        setIsAllDay(true);
+      }
+    }
+
+    if (!selectedEvent && eventSlot) {
+      reset({
+        title: "",
+        dateStart: moment(eventSlot.start).format("YYYY-MM-DD"),
+        dateEnd: moment(eventSlot.end).subtract(1, "days").format("YYYY-MM-DD"),
+        startTime: moment(eventSlot.start).format("HH:mm"),
+        endTime: moment(eventSlot.end).format("HH:mm"),
+        allDay: false,
+        eventColor: "default",
+        desc: "",
+        date: moment(eventSlot.start).format("YYYY-MM-DD"),
+      });
+    }
+  }, [selectedEvent, eventSlot, reset, moreThanOneDay]);
+
+  const isAllDayChecked = isAllDay || moreThanOneDay;
 
   return (
     <div
@@ -147,19 +211,53 @@ export const ModalOfEvents: React.FC<Props> = ({
           defaultValue={selectedEvent ? selectedEvent.title : ""}
         />
         {errors.title && (
-          <span className="modal-window-error-title">Max length is 30 symbols!</span>
+          <span className="modal-window-error-title">
+            Max length is 30 symbols!
+          </span>
         )}
 
-        <input
-          {...register("date", { required: true })}
-          placeholder="event date"
-          type="date"
-          defaultValue={
-            selectedEvent
-              ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
-              : date
-          }
-        />
+        {moreThanOneDay ? (
+          <>
+            <label className="modal-window-date">
+              <span>Start:</span>
+              <input
+                {...register("dateStart", { required: true })}
+                placeholder="event date start"
+                type="date"
+                defaultValue={
+                  selectedEvent
+                    ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+                    : date
+                }
+              />
+            </label>
+
+            <label className="modal-window-date">
+              <span>End:</span>
+              <input
+                {...register("dateEnd", { required: true })}
+                placeholder="event date end"
+                type="date"
+                defaultValue={
+                  selectedEvent
+                    ? convertDate(selectedEvent.end, DateStyle.YYYYMMDD)
+                    : date
+                }
+              />
+            </label>
+          </>
+        ) : (
+          <input
+            {...register("date", { required: true })}
+            placeholder="event date"
+            type="date"
+            defaultValue={
+              selectedEvent
+                ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
+                : date
+            }
+          />
+        )}
 
         <label className="modal-window-checkbox">
           <span>All-day event</span>
@@ -169,7 +267,9 @@ export const ModalOfEvents: React.FC<Props> = ({
               setIsAllDay((state.target as HTMLInputElement).checked)
             }
             type="checkbox"
-            defaultChecked={selectedEvent ? selectedEvent.allDay : false}
+            disabled={moreThanOneDay}
+            checked={isAllDayChecked}
+            defaultValue={isAllDayChecked ? "checked" : ""}
           />
         </label>
 

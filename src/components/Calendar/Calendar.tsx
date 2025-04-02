@@ -108,7 +108,9 @@ export const MyCalendar = () => {
           "rbc-current-time-indicator"
         )[0];
 
-        indicator.classList.add("indicator-day");
+        if (indicator) {
+          indicator.classList.add("indicator-day");
+        }
       }, 0);
     }
 
