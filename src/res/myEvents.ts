@@ -1,12 +1,13 @@
 import { MyEvent } from "../types";
+import moment from "moment";
 
 export const myEvents: MyEvent[] = [
   {
     id: 1,
     title: "Long Event",
-    start: new Date(2025, 3, 29),
-    end: new Date(2025, 3, 31),
+    start: moment("2025-04-29").toDate(),
+    end: moment("2025-05-01").toDate(),
     allDay: true,
-    eventColor: 'default',
+    eventColor: "default",
   },
 ];

@@ -224,7 +224,7 @@ export const ModalOfEvents: React.FC<Props> = ({
                 {...register("dateStart", { required: true })}
                 placeholder="event date start"
                 type="date"
-                defaultValue={
+                value={
                   selectedEvent
                     ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
                     : date
@@ -238,11 +238,14 @@ export const ModalOfEvents: React.FC<Props> = ({
                 {...register("dateEnd", { required: true })}
                 placeholder="event date end"
                 type="date"
-                defaultValue={
+                value={
                   selectedEvent
-                    ? convertDate(selectedEvent.end, DateStyle.YYYYMMDD)
+                    ? moment(selectedEvent.end)
+                        .subtract(1, "days")
+                        .format("YYYY-MM-DD")
                     : date
                 }
+                
               />
             </label>
           </>
@@ -251,7 +254,7 @@ export const ModalOfEvents: React.FC<Props> = ({
             {...register("date", { required: true })}
             placeholder="event date"
             type="date"
-            defaultValue={
+            value={
               selectedEvent
                 ? convertDate(selectedEvent.start, DateStyle.YYYYMMDD)
                 : date
